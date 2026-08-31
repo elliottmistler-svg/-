@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TikTok Downloader Pro</title>
     <style>
-        /* ========== الأساسيات ========== */
+        /* ====== الأساسيات ====== */
         * {
             margin: 0;
             padding: 0;
@@ -21,7 +21,6 @@
             padding: 20px;
             direction: rtl;
         }
-        /* خلفية متحركة */
         body::before {
             content: '';
             position: fixed;
@@ -53,7 +52,7 @@
             align-items: flex-start;
         }
 
-        /* ========== القائمة الجانبية (ديناميكية) ========== */
+        /* ====== القائمة الجانبية ====== */
         .sidenav {
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(16px);
@@ -120,7 +119,7 @@
             background: rgba(0, 212, 255, 0.15);
         }
 
-        /* ========== المحتوى الرئيسي ========== */
+        /* ====== المحتوى الرئيسي ====== */
         .main-content {
             flex: 1;
             min-width: 0;
@@ -136,7 +135,70 @@
             transition: all 0.3s ease;
         }
 
-        /* الهيدر */
+        /* ====== إشعارات داخلية (Toast) ====== */
+        .toast-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+            width: 90%;
+            max-width: 500px;
+        }
+        .toast {
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(12px);
+            color: #fff;
+            padding: 14px 22px;
+            border-radius: 60px;
+            border-right: 4px solid #ff0050;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            font-size: 15px;
+            font-weight: 500;
+            pointer-events: auto;
+            animation: slideDown 0.4s ease forwards;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: all 0.3s;
+        }
+        .toast.success {
+            border-right-color: #00b894;
+        }
+        .toast.error {
+            border-right-color: #e17055;
+        }
+        .toast.info {
+            border-right-color: #00d4ff;
+        }
+        .toast .toast-icon {
+            font-size: 22px;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        .toast-out {
+            animation: slideUp 0.3s ease forwards;
+        }
+        @keyframes slideUp {
+            to {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.9);
+            }
+        }
+
+        /* ====== باقي الأنماط ====== */
         .header {
             display: flex;
             align-items: center;
@@ -185,7 +247,6 @@
             border-radius: 30px;
         }
 
-        /* الاشتراك */
         .subscribe-box {
             background: rgba(255, 193, 7, 0.12);
             border-right: 4px solid #ffc107;
@@ -223,7 +284,6 @@
             }
         }
 
-        /* الإدخال */
         .input-group {
             display: flex;
             gap: 12px;
@@ -267,7 +327,6 @@
             box-shadow: 0 8px 30px rgba(255, 0, 80, 0.5);
         }
 
-        /* سبينر */
         .spinner {
             display: none;
             align-items: center;
@@ -310,7 +369,6 @@
             }
         }
 
-        /* بطاقة النتيجة */
         .result-card {
             background: rgba(0, 0, 0, 0.25);
             border-radius: 24px;
@@ -382,7 +440,6 @@
             opacity: 0.9;
         }
 
-        /* عرض الصورة أو الفيديو */
         .media-container {
             border-radius: 16px;
             overflow: hidden;
@@ -401,7 +458,6 @@
             display: block;
         }
 
-        /* أزرار التحميل الديناميكية */
         .download-actions {
             display: flex;
             flex-wrap: wrap;
@@ -445,7 +501,6 @@
             color: #2d3436 !important;
         }
 
-        /* صوت */
         audio {
             width: 100%;
             border-radius: 16px;
@@ -564,7 +619,7 @@
             color: rgba(255, 255, 255, 0.3);
         }
 
-        /* ====== قائمة التحميل (المخزنة) ====== */
+        /* ====== قائمة التحميلات (السجل) ====== */
         .history-list {
             margin-top: 20px;
             border-top: 1px solid rgba(255, 255, 255, 0.04);
@@ -587,6 +642,8 @@
             color: #ccc;
             font-size: 13px;
             transition: 0.2s;
+            gap: 10px;
+            flex-wrap: wrap;
         }
         .history-item:hover {
             background: rgba(255, 255, 255, 0.06);
@@ -603,6 +660,14 @@
         }
         .history-item .hlink:hover {
             text-decoration: underline;
+        }
+        .history-item .preview-thumb {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #222;
+            flex-shrink: 0;
         }
 
         /* ====== استجابة ====== */
@@ -638,6 +703,14 @@
             .container {
                 padding: 20px 16px;
             }
+            .toast-container {
+                top: 10px;
+                width: 95%;
+            }
+            .toast {
+                font-size: 14px;
+                padding: 12px 16px;
+            }
         }
         @media (max-width: 480px) {
             .header h1 {
@@ -652,7 +725,6 @@
             }
         }
 
-        /* تمرير */
         ::-webkit-scrollbar {
             width: 5px;
         }
@@ -674,8 +746,11 @@
 </head>
 <body>
 
+    <!-- ====== حاوية الإشعارات ====== -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <div class="app-wrapper">
-        <!-- ===== القائمة الجانبية ===== -->
+        <!-- القائمة الجانبية -->
         <nav class="sidenav" id="sidenav">
             <div class="brand">🎥 <span>TikDownload</span></div>
             <a class="active" data-page="home">🏠 الرئيسية</a>
@@ -686,19 +761,17 @@
             </div>
         </nav>
 
-        <!-- ===== المحتوى الرئيسي ===== -->
+        <!-- المحتوى الرئيسي -->
         <div class="main-content">
             <div class="container" id="mainContainer">
-                <!-- الهيدر -->
                 <div class="header">
                     <div class="app-icon">🎥</div>
                     <h1>Tik <span>Downloader</span></h1>
                     <div class="status" id="loginStatus">⚡ غير مسجل</div>
                 </div>
 
-                <!-- ===== الصفحة الرئيسية ===== -->
+                <!-- ====== الصفحة الرئيسية ====== -->
                 <div id="page-home">
-                    <!-- رسالة الاشتراك -->
                     <div class="subscribe-box" id="subscriptionBox">
                         <div id="subMessage">🚫 يجب الاشتراك في القنوات المطلوبة.</div>
                         <div class="chips" id="channelsList"></div>
@@ -714,7 +787,6 @@
                         <div class="dot"></div><div class="dot"></div><div class="dot"></div>
                     </div>
 
-                    <!-- بطاقة النتيجة -->
                     <div class="result-card" id="resultCard">
                         <div class="user-profile">
                             <div class="avatar-frame"><img id="avatarImg" src="" alt="Avatar"></div>
@@ -731,27 +803,21 @@
                         </div>
                         <div class="video-title" id="videoTitle">عنوان الفيديو</div>
 
-                        <!-- حاوية الميديا (صورة أو فيديو) -->
-                        <div class="media-container" id="mediaContainer">
-                            <!-- سيتم حقن img أو video هنا -->
-                        </div>
+                        <div class="media-container" id="mediaContainer"></div>
 
-                        <!-- أزرار التحميل الديناميكية -->
-                        <div class="download-actions" id="downloadActions">
-                            <!-- سيتم إنشاؤها بواسطة JS -->
-                        </div>
+                        <div class="download-actions" id="downloadActions"></div>
 
                         <audio id="audioPlayer" controls style="margin-top:10px;"></audio>
                     </div>
 
-                    <!-- سجل التحميلات (يظهر في الصفحة الرئيسية أيضاً) -->
+                    <!-- سجل التحميلات -->
                     <div class="history-list" id="historyList">
                         <h4>📋 آخر التحميلات</h4>
                         <div id="historyItems"></div>
                     </div>
                 </div>
 
-                <!-- ===== صفحة المشرف ===== (مخفية) -->
+                <!-- ====== صفحة المشرف ====== -->
                 <div id="page-admin" style="display:none;">
                     <div class="admin-panel active" style="background:transparent; padding:0; border:none;">
                         <h3 style="color:#fff;">🔐 دخول المشرف</h3>
@@ -810,7 +876,7 @@
                     </div>
                 </div>
 
-                <!-- ===== صفحة التحميلات (السجل) ===== -->
+                <!-- ====== صفحة التحميلات ====== -->
                 <div id="page-history" style="display:none;">
                     <h3 style="color:#fff; font-weight:400; margin-bottom:16px;">📂 قائمة التحميلات المخزنة</h3>
                     <div id="historyFullList"></div>
@@ -824,14 +890,14 @@
 
     <script>
         // ================================================================
-        //  البيانات والتخزين
+        //  البيانات والتخزين (مع حماية الأخطاء)
         // ================================================================
         const DEFAULT_DATA = {
             users: [],
             required_channels: [],
             admin_ids: [7440472042, 8305189242],
             subscription_message: "🚫 يجب عليك الاشتراك في القنوات المطلوبة أولاً.",
-            download_history: [] // {url, title, date, type}
+            download_history: []
         };
 
         function loadData() {
@@ -844,16 +910,44 @@
                     }
                     return parsed;
                 }
-            } catch (e) {}
+            } catch (e) {
+                console.warn('خطأ في قراءة localStorage، سيتم استخدام البيانات الافتراضية', e);
+            }
             return JSON.parse(JSON.stringify(DEFAULT_DATA));
         }
 
         function saveData(data) {
-            localStorage.setItem('tiktok_app_data', JSON.stringify(data));
+            try {
+                localStorage.setItem('tiktok_app_data', JSON.stringify(data));
+            } catch (e) {
+                console.error('فشل حفظ البيانات في localStorage', e);
+                showToast('فشل حفظ البيانات محلياً', 'error');
+            }
         }
 
         let appData = loadData();
         let currentUserId = parseInt(localStorage.getItem('current_user_id')) || null;
+
+        // ================================================================
+        //  نظام الإشعارات الداخلية (Toast)
+        // ================================================================
+        function showToast(message, type = 'info', duration = 4000) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icons = {
+                success: '✅',
+                error: '❌',
+                info: 'ℹ️'
+            };
+            toast.innerHTML = `<span class="toast-icon">${icons[type] || 'ℹ️'}</span> ${message}`;
+            container.appendChild(toast);
+
+            setTimeout(() => {
+                toast.classList.add('toast-out');
+                setTimeout(() => toast.remove(), 400);
+            }, duration);
+        }
 
         // ================================================================
         //  دوال مساعدة
@@ -878,7 +972,6 @@
         //  تحديث الواجهة العامة
         // ================================================================
         function updateUI() {
-            // رسالة الاشتراك
             const subBox = document.getElementById('subscriptionBox');
             const subMsg = document.getElementById('subMessage');
             const channelsDiv = document.getElementById('channelsList');
@@ -890,12 +983,10 @@
                 subBox.classList.remove('active');
             }
 
-            // حالة المستخدم
             const status = document.getElementById('loginStatus');
             status.textContent = currentUserId && isAdmin(currentUserId) ? `✅ مشرف ${currentUserId}` :
                 currentUserId ? `👤 مستخدم ${currentUserId}` : '⚡ غير مسجل';
 
-            // لوحة المشرف
             const adminContent = document.getElementById('adminContent');
             if (currentUserId && isAdmin(currentUserId)) {
                 adminContent.style.display = 'block';
@@ -912,16 +1003,16 @@
                 adminContent.style.display = 'none';
             }
 
-            // تحديث سجل التحميلات (في الصفحة الرئيسية وفي صفحة السجل)
             renderHistory();
         }
 
         // ================================================================
-        //  التنقل بين الصفحات (ديناميكي)
+        //  التنقل بين الصفحات
         // ================================================================
         function navigateTo(page) {
             document.querySelectorAll('.sidenav a').forEach(el => el.classList.remove('active'));
-            document.querySelector(`.sidenav a[data-page="${page}"]`)?.classList.add('active');
+            const target = document.querySelector(`.sidenav a[data-page="${page}"]`);
+            if (target) target.classList.add('active');
 
             document.getElementById('page-home').style.display = page === 'home' ? 'block' : 'none';
             document.getElementById('page-admin').style.display = page === 'admin' ? 'block' : 'none';
@@ -933,8 +1024,7 @@
         document.querySelectorAll('.sidenav a[data-page]').forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
-                const page = this.dataset.page;
-                navigateTo(page);
+                navigateTo(this.dataset.page);
             });
         });
 
@@ -943,95 +1033,103 @@
         // ================================================================
         function loginAdmin() {
             const id = parseInt(document.getElementById('adminIdInput').value);
-            if (!id) return alert('أدخل معرفاً صحيحاً');
+            if (!id) {
+                showToast('أدخل معرفاً صحيحاً', 'error');
+                return;
+            }
             if (!isAdmin(id)) {
                 if (confirm('هذا المعرف ليس مشرفاً. هل تريد إضافته كمدير؟')) {
                     appData.admin_ids.push(id);
                     saveData(appData);
+                    showToast(`تم إضافة ${id} كمشرف`, 'success');
                 } else return;
             }
             setCurrentUserId(id);
             updateUI();
-            alert(`مرحباً مشرف ${id}`);
+            showToast(`مرحباً مشرف ${id}`, 'success');
         }
 
         function logoutAdmin() {
             setCurrentUserId(null);
             updateUI();
-            alert('تم تسجيل الخروج');
+            showToast('تم تسجيل الخروج', 'info');
             navigateTo('home');
         }
 
         function addChannel() {
             const ch = document.getElementById('newChannel').value.trim();
-            if (!ch) return alert('أدخل المعرف');
-            if (appData.required_channels.includes(ch)) return alert('موجودة بالفعل');
+            if (!ch) return showToast('أدخل معرف القناة', 'error');
+            if (appData.required_channels.includes(ch)) return showToast('القناة موجودة بالفعل', 'error');
             appData.required_channels.push(ch);
             saveData(appData);
             updateUI();
             document.getElementById('newChannel').value = '';
-            alert(`تمت إضافة @${ch}`);
+            showToast(`تمت إضافة @${ch}`, 'success');
         }
 
         function removeChannel() {
             const ch = document.getElementById('removeChannel').value.trim();
-            if (!ch) return alert('أدخل المعرف');
+            if (!ch) return showToast('أدخل المعرف', 'error');
             const idx = appData.required_channels.indexOf(ch);
-            if (idx === -1) return alert('غير موجودة');
+            if (idx === -1) return showToast('القناة غير موجودة', 'error');
             appData.required_channels.splice(idx, 1);
             saveData(appData);
             updateUI();
             document.getElementById('removeChannel').value = '';
-            alert(`تم حذف @${ch}`);
+            showToast(`تم حذف @${ch}`, 'info');
         }
 
         function setSubMessage() {
             const msg = document.getElementById('subMsgInput').value.trim();
-            if (!msg) return alert('الرسالة فارغة');
+            if (!msg) return showToast('الرسالة فارغة', 'error');
             appData.subscription_message = msg;
             saveData(appData);
             updateUI();
-            alert('تم التحديث');
+            showToast('تم تحديث الرسالة', 'success');
         }
 
         function addAdmin() {
             const id = parseInt(document.getElementById('newAdminId').value);
-            if (!id) return alert('أدخل معرفاً');
-            if (appData.admin_ids.includes(id)) return alert('موجود بالفعل');
+            if (!id) return showToast('أدخل معرفاً', 'error');
+            if (appData.admin_ids.includes(id)) return showToast('موجود بالفعل', 'error');
             appData.admin_ids.push(id);
             saveData(appData);
             updateUI();
             document.getElementById('newAdminId').value = '';
-            alert(`تم إضافة ${id}`);
+            showToast(`تم إضافة ${id}`, 'success');
         }
 
         function broadcast() {
             const msg = document.getElementById('broadcastMsg').value.trim();
-            if (!msg) return alert('اكتب رسالة');
+            if (!msg) return showToast('اكتب رسالة', 'error');
             const count = appData.users.length;
             if (count === 0) {
                 if (currentUserId && !appData.users.includes(currentUserId)) {
                     appData.users.push(currentUserId);
                     saveData(appData);
                 }
-                alert('لا يوجد مستخدمون. تم إضافتك للتجربة.');
+                showToast('لا يوجد مستخدمون. تم إضافتك للتجربة.', 'info');
                 updateUI();
                 return;
             }
-            alert(`✅ تم إرسال الرسالة إلى ${count} مستخدم (محاكاة).`);
+            showToast(`✅ تم إرسال الرسالة إلى ${count} مستخدم (محاكاة)`, 'success');
             document.getElementById('broadcastMsg').value = '';
             document.getElementById('broadcastStatus').textContent = `أرسلت لـ ${count} مستخدم`;
             setTimeout(() => document.getElementById('broadcastStatus').textContent = '', 3000);
         }
 
         // ================================================================
-        //  دوال التحميل (Blob)
+        //  تحميل الملفات باستخدام Blob + Fallback
         // ================================================================
         async function downloadFile(url, filename) {
-            if (!url) return alert('لا يوجد رابط');
+            if (!url) {
+                showToast('لا يوجد رابط للتحميل', 'error');
+                return;
+            }
             try {
+                showToast('جاري تحميل الملف...', 'info', 2000);
                 const response = await fetch(url);
-                if (!response.ok) throw new Error('فشل الجلب');
+                if (!response.ok) throw new Error('فشل جلب الملف');
                 const blob = await response.blob();
                 const link = document.createElement('a');
                 link.href = URL.createObjectURL(blob);
@@ -1040,25 +1138,28 @@
                 link.click();
                 document.body.removeChild(link);
                 setTimeout(() => URL.revokeObjectURL(link.href), 10000);
+                showToast(`تم تحميل ${filename} بنجاح`, 'success');
             } catch (e) {
-                if (confirm('⚠️ لا يمكن التحميل المباشر. هل تريد فتح الرابط في تبويب جديد؟')) {
-                    window.open(url, '_blank');
-                }
+                showToast('⚠️ فشل التحميل المباشر. سيتم فتح الرابط في تبويب جديد.', 'error');
+                window.open(url, '_blank');
             }
         }
 
         // ================================================================
-        //  معالجة الرابط وعرض النتائج
+        //  معالجة الرابط وعرض النتائج (مع تحسين الأخطاء)
         // ================================================================
         document.getElementById('downloadBtn').addEventListener('click', async function(e) {
             e.preventDefault();
             const url = document.getElementById('urlInput').value.trim();
-            if (!url) return alert('ألصق رابط الفيديو أولاً');
+            if (!url) {
+                showToast('ألصق رابط الفيديو أولاً', 'error');
+                return;
+            }
 
             // التحقق من الاشتراك
             if (appData.required_channels.length > 0) {
                 if (!currentUserId) {
-                    alert('⚠️ يجب تسجيل الدخول أولاً (أدخل معرفك في لوحة المشرف).');
+                    showToast('⚠️ يجب تسجيل الدخول أولاً (أدخل معرفك في لوحة المشرف).', 'error');
                     return;
                 }
                 if (!appData.users.includes(currentUserId)) {
@@ -1075,12 +1176,12 @@
             try {
                 const apiUrl = `https://tikwm.com/api/?url=${encodeURIComponent(url)}`;
                 const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error('فشل الاتصال');
+                if (!response.ok) throw new Error('فشل الاتصال بخادم التحميل');
                 const data = await response.json();
-                if (!data.data) throw new Error('الرابط غير صالح');
+                if (!data || !data.data) throw new Error('الرابط غير صالح أو الفيديو غير موجود');
 
                 const d = data.data;
-                // بيانات عامة
+                // تعبئة البيانات العامة
                 document.getElementById('avatarImg').src = d.author?.avatar || '';
                 document.getElementById('authorName').textContent = d.author?.unique_id || 'غير معروف';
                 document.getElementById('regionInfo').textContent = '📍 ' + (d.region || 'غير معروف');
@@ -1090,21 +1191,21 @@
                 document.getElementById('durationSec').textContent = d.duration || 0;
                 document.getElementById('videoTitle').textContent = d.title || 'بدون عنوان';
 
-                // كشف نوع المحتوى: صور أم فيديو؟
-                const images = d.images; // مصفوفة صور (في حالة البوستات المتعددة)
+                const images = d.images;
                 const videoUrl = d.play || '';
                 const musicUrl = d.music || '';
                 const isImage = images && images.length > 0;
 
                 const mediaContainer = document.getElementById('mediaContainer');
-                mediaContainer.innerHTML = ''; // تفريغ
+                mediaContainer.innerHTML = '';
+                let thumbnail = '';
 
                 if (isImage) {
-                    // عرض الصورة الأولى
                     const img = document.createElement('img');
                     img.src = images[0];
                     img.alt = 'صورة تيك توك';
                     mediaContainer.appendChild(img);
+                    thumbnail = images[0];
                 } else if (videoUrl) {
                     const vid = document.createElement('video');
                     vid.src = videoUrl;
@@ -1112,14 +1213,15 @@
                     vid.preload = 'metadata';
                     vid.style.maxHeight = '500px';
                     mediaContainer.appendChild(vid);
+                    thumbnail = d.author?.avatar || '';
                 } else {
                     mediaContainer.innerHTML = '<div style="color:#888;padding:20px;">لا يوجد محتوى مرئي</div>';
                 }
 
-                // أزرار التحميل الديناميكية
+                // أزرار التحميل
                 const actionsDiv = document.getElementById('downloadActions');
                 actionsDiv.innerHTML = '';
-                // زر تحميل الفيديو/الصورة
+
                 if (isImage) {
                     const btnImg = document.createElement('button');
                     btnImg.className = 'btn-secondary btn-success';
@@ -1134,7 +1236,6 @@
                     actionsDiv.appendChild(btnVid);
                 }
 
-                // زر تحميل الصوت (دائماً)
                 if (musicUrl) {
                     const btnAudio = document.createElement('button');
                     btnAudio.className = 'btn-secondary btn-purple';
@@ -1143,14 +1244,13 @@
                     actionsDiv.appendChild(btnAudio);
                 }
 
-                // زر فتح الرابط
                 const btnLink = document.createElement('button');
                 btnLink.className = 'btn-secondary';
                 btnLink.innerHTML = '🔗 رابط';
                 btnLink.onclick = () => {
                     const link = isImage ? images[0] : videoUrl;
                     if (link) window.open(link, '_blank');
-                    else alert('لا يوجد رابط');
+                    else showToast('لا يوجد رابط', 'error');
                 };
                 actionsDiv.appendChild(btnLink);
 
@@ -1159,12 +1259,13 @@
                 audioPlayer.src = musicUrl || '';
                 audioPlayer.load();
 
-                // حفظ في السجل
+                // حفظ السجل
                 const historyEntry = {
                     url: url,
                     title: d.title || 'بدون عنوان',
                     date: Date.now(),
-                    type: isImage ? 'صورة' : 'فيديو'
+                    type: isImage ? 'صورة' : 'فيديو',
+                    thumbnail: thumbnail
                 };
                 appData.download_history.unshift(historyEntry);
                 if (appData.download_history.length > 50) appData.download_history.pop();
@@ -1172,16 +1273,17 @@
                 renderHistory();
 
                 resultCard.classList.add('active');
+                showToast('تم جلب المحتوى بنجاح', 'success');
 
             } catch (error) {
-                alert('❌ خطأ: ' + error.message);
+                showToast('❌ خطأ: ' + error.message, 'error');
             } finally {
                 spinner.classList.remove('active');
             }
         });
 
         // ================================================================
-        //  عرض سجل التحميلات
+        //  عرض سجل التحميلات مع معاينة (مع حماية الصور المعطلة)
         // ================================================================
         function renderHistory() {
             const container = document.getElementById('historyItems');
@@ -1192,7 +1294,10 @@
             }
             container.innerHTML = history.slice(0, 5).map(item => `
                 <div class="history-item">
-                    <span>${item.title.substring(0, 30)}${item.title.length>30?'...':''}</span>
+                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                        ${item.thumbnail ? `<img class="preview-thumb" src="${item.thumbnail}" alt="معاينة" onerror="this.style.display='none'">` : ''}
+                        <span style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.title.substring(0, 35)}${item.title.length>35?'...':''}</span>
+                    </div>
                     <span>
                         <span class="hdate">${formatDate(item.date)}</span>
                         <a class="hlink" onclick="window.open('${item.url}','_blank')">🔗</a>
@@ -1210,7 +1315,10 @@
             }
             container.innerHTML = history.map(item => `
                 <div class="history-item">
-                    <span>${item.title} <span style="color:rgba(255,255,255,0.2);font-size:12px;">(${item.type})</span></span>
+                    <div style="display:flex; align-items:center; gap:10px; flex:1; min-width:0;">
+                        ${item.thumbnail ? `<img class="preview-thumb" src="${item.thumbnail}" alt="معاينة" onerror="this.style.display='none'">` : ''}
+                        <span style="flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${item.title}</span>
+                    </div>
                     <span>
                         <span class="hdate">${formatDate(item.date)}</span>
                         <a class="hlink" onclick="window.open('${item.url}','_blank')">🔗</a>
@@ -1225,7 +1333,16 @@
             saveData(appData);
             renderHistory();
             renderFullHistory();
+            showToast('تم مسح السجل', 'info');
         }
+
+        // ================================================================
+        //  معالجة الأخطاء العالمية (لمنع تعطل التطبيق)
+        // ================================================================
+        window.addEventListener('unhandledrejection', function(e) {
+            console.error('خطأ غير معالج:', e.reason);
+            showToast('حدث خطأ غير متوقع، يرجى المحاولة مرة أخرى.', 'error');
+        });
 
         // ================================================================
         //  تهيئة الصفحة
@@ -1233,12 +1350,10 @@
         updateUI();
         if (currentUserId) document.getElementById('adminIdInput').value = currentUserId;
 
-        // ضغط Enter في حقل الرابط
         document.getElementById('urlInput').addEventListener('keydown', function(e) {
             if (e.key === 'Enter') document.getElementById('downloadBtn').click();
         });
 
-        // التنقل الافتراضي
         navigateTo('home');
     </script>
 
