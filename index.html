@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Downloader - مشرف</title>
+    <title>TikTok Downloader - متكامل</title>
     <style>
         * {
             margin: 0;
@@ -44,7 +44,7 @@
             position: relative;
             z-index: 1;
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
@@ -79,6 +79,32 @@
         #loginScreen p {
             color: rgba(255, 255, 255, 0.5);
             margin-bottom: 25px;
+        }
+        .login-tabs {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+        .login-tabs button {
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 8px 24px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        .login-tabs button.active {
+            background: rgba(255, 0, 80, 0.2);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 0, 80, 0.1);
+        }
+        .login-tabs button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
         }
         .login-form input {
             width: 100%;
@@ -122,43 +148,106 @@
             font-size: 14px;
             margin-top: 10px;
         }
-
-        /* ===== الواجهة الرئيسية ===== */
-        #mainApp {
-            animation: fadeSlide 0.5s ease;
+        .login-success {
+            color: #00b894;
+            font-size: 14px;
+            margin-top: 10px;
         }
-        .header {
+        .guest-btn {
+            background: rgba(255, 255, 255, 0.05) !important;
+            color: #aaa !important;
+            box-shadow: none !important;
+            margin-top: 10px;
+        }
+        .guest-btn:hover {
+            background: rgba(255, 255, 255, 0.1) !important;
+        }
+        .login-form .switch-link {
+            color: #00d4ff;
+            cursor: pointer;
+            font-size: 14px;
+            text-align: center;
+            display: block;
+            margin-top: 12px;
+        }
+        .login-form .switch-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== القائمة العلوية ===== */
+        .top-nav {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
+            align-items: center;
+            padding-bottom: 16px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             margin-bottom: 20px;
         }
-        .header h1 {
+        .top-nav .logo {
             color: #fff;
-            font-size: 24px;
+            font-size: 22px;
+            font-weight: 700;
         }
-        .header h1 span {
+        .top-nav .logo span {
             background: linear-gradient(90deg, #ff0050, #00d4ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .header .logout-btn {
+        .top-nav .user-badge {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 13px;
+            background: rgba(255, 255, 255, 0.06);
+            padding: 4px 16px;
+            border-radius: 30px;
+        }
+        .top-nav .tabs {
+            display: flex;
+            gap: 12px;
+        }
+        .top-nav .tabs button {
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 8px 20px;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+        .top-nav .tabs button.active {
+            background: rgba(255, 0, 80, 0.2);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(255, 0, 80, 0.1);
+        }
+        .top-nav .tabs button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .top-nav .logout-btn {
             background: rgba(255, 0, 0, 0.2);
             border: none;
             color: #fff;
-            padding: 6px 16px;
+            padding: 6px 18px;
             border-radius: 30px;
             cursor: pointer;
             font-size: 13px;
             transition: 0.2s;
         }
-        .header .logout-btn:hover {
+        .top-nav .logout-btn:hover {
             background: rgba(255, 0, 0, 0.4);
         }
 
-        /* الإحصائيات */
+        /* ===== المحتوى ===== */
+        .tab-content {
+            display: none;
+            animation: fadeSlide 0.4s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== تبويب الرئيسية ===== */
         .stats-box {
             display: flex;
             gap: 20px;
@@ -181,7 +270,6 @@
             font-size: 18px;
         }
 
-        /* نموذج الإدخال */
         .input-group {
             display: flex;
             gap: 12px;
@@ -225,7 +313,7 @@
             box-shadow: 0 8px 30px rgba(255, 0, 80, 0.5);
         }
 
-        /* ===== شريط التقدم داخل الفيديو ===== */
+        /* ===== شريط التقدم فوق الفيديو ===== */
         .video-wrapper {
             position: relative;
             background: #000;
@@ -239,50 +327,57 @@
             display: block;
             background: #000;
         }
-        .video-progress-overlay {
+        .video-wrapper img {
+            width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+            background: #000;
+        }
+        .progress-overlay {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            height: 6px;
-            background: rgba(255, 255, 255, 0.2);
-            transition: opacity 0.3s;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.15);
             opacity: 0;
+            transition: opacity 0.3s;
             pointer-events: none;
+            z-index: 3;
         }
-        .video-progress-overlay.active {
+        .progress-overlay.active {
             opacity: 1;
         }
-        .video-progress-overlay .fill {
+        .progress-overlay .fill {
             height: 100%;
             width: 0%;
             background: linear-gradient(90deg, #ff0050, #00d4ff);
             border-radius: 0 0 16px 16px;
-            transition: width 0.3s ease;
+            transition: width 0.25s ease;
         }
-        .video-progress-text {
+        .progress-text-overlay {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
             color: #fff;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
-            text-shadow: 0 0 20px rgba(0,0,0,0.8);
-            background: rgba(0,0,0,0.6);
-            padding: 12px 24px;
+            text-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 12px 30px;
             border-radius: 60px;
             display: none;
-            z-index: 5;
-            backdrop-filter: blur(4px);
-            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 4;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            direction: ltr;
         }
-        .video-progress-text.active {
+        .progress-text-overlay.active {
             display: block;
             animation: fadeSlide 0.3s ease;
         }
 
-        /* بطاقة النتيجة */
         .result-card {
             background: rgba(0, 0, 0, 0.25);
             border-radius: 24px;
@@ -401,7 +496,108 @@
             background: #1a1a2e;
         }
 
-        /* المطور */
+        /* ===== تبويب المشرف ===== */
+        .admin-panel {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .admin-panel h2 {
+            color: #fff;
+            font-weight: 400;
+            margin-bottom: 20px;
+            font-size: 22px;
+        }
+        .admin-panel .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+        .admin-panel input,
+        .admin-panel textarea {
+            flex: 1;
+            min-width: 160px;
+            padding: 10px 18px;
+            border-radius: 40px;
+            border: none;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            outline: 1px solid rgba(255, 255, 255, 0.04);
+            transition: 0.3s;
+        }
+        .admin-panel input:focus,
+        .admin-panel textarea:focus {
+            outline-color: #00d4ff;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .admin-panel textarea {
+            border-radius: 16px;
+            resize: vertical;
+        }
+        .btn-sm {
+            padding: 8px 18px;
+            border-radius: 40px;
+            border: none;
+            background: #6c5ce7;
+            color: #fff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 13px;
+        }
+        .btn-sm:hover {
+            transform: scale(1.03);
+            filter: brightness(1.1);
+        }
+        .btn-danger {
+            background: #e17055;
+        }
+        .admin-panel .list-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin: 6px 0;
+        }
+        .admin-panel .tag {
+            background: rgba(255, 255, 255, 0.06);
+            padding: 3px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: #ccc;
+        }
+        .admin-panel .user-item {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 6px 12px;
+            border-radius: 8px;
+            margin: 4px 0;
+            color: #ddd;
+            font-size: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .admin-panel .user-item .badge {
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 2px 10px;
+            border-radius: 30px;
+            color: #aaa;
+        }
+        .admin-panel .scroll-box {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 4px;
+            border-radius: 12px;
+            padding: 4px;
+        }
+        .admin-panel .text-muted {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* ===== المطور ===== */
         .developer-info {
             margin-top: 25px;
             padding-top: 18px;
@@ -433,7 +629,7 @@
             }
         }
 
-        /* إشعارات (Toast) */
+        /* ===== الإشعارات ===== */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -491,11 +687,22 @@
                 transform: translateY(-20px) scale(0.9);
             }
         }
+        .btn-copy-sm {
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            color: #ccc;
+            padding: 4px 12px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .btn-copy-sm:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body>
 
-    <!-- حاوية الإشعارات -->
     <div class="toast-container" id="toastContainer"></div>
 
     <div class="container">
@@ -504,71 +711,166 @@
         <div id="loginScreen">
             <div class="text-center">
                 <h1>Tik <span>Downloader</span></h1>
-                <p>🔐 سجل دخولك للوصول إلى لوحة التحميل</p>
+                <p>🔐 سجل دخولك أو أنشئ حساباً جديداً</p>
             </div>
+
+            <!-- أزرار التبديل بين تسجيل الدخول والتسجيل -->
+            <div class="login-tabs">
+                <button class="active" data-login-tab="login">تسجيل دخول</button>
+                <button data-login-tab="register">إنشاء حساب</button>
+            </div>
+
+            <!-- نموذج تسجيل الدخول -->
             <form class="login-form" id="loginForm">
-                <input type="text" id="usernameInput" placeholder="اسم المستخدم" required>
-                <input type="password" id="passwordInput" placeholder="كلمة المرور" required>
-                <button type="submit">🚀 دخول</button>
-                <div id="loginError" class="login-error hidden"></div>
+                <div id="loginFormFields">
+                    <input type="text" id="usernameInput" placeholder="اسم المستخدم" required>
+                    <input type="password" id="passwordInput" placeholder="كلمة المرور" required>
+                    <button type="submit">🚀 دخول</button>
+                    <div id="loginError" class="login-error hidden"></div>
+                    <div id="loginSuccess" class="login-success hidden"></div>
+                    <button type="button" class="guest-btn" id="guestLoginBtn">👤 دخول كضيف</button>
+                </div>
+                <div id="registerFormFields" class="hidden">
+                    <input type="text" id="regUsername" placeholder="اسم المستخدم الجديد" required>
+                    <input type="password" id="regPassword" placeholder="كلمة المرور" required>
+                    <input type="password" id="regPasswordConfirm" placeholder="تأكيد كلمة المرور" required>
+                    <button type="button" id="registerBtn">📝 إنشاء حساب</button>
+                    <div id="registerError" class="login-error hidden"></div>
+                    <div id="registerSuccess" class="login-success hidden"></div>
+                </div>
             </form>
         </div>
 
-        <!-- ===== الواجهة الرئيسية (بعد الدخول) ===== -->
+        <!-- ===== الواجهة الرئيسية ===== -->
         <div id="mainApp" class="hidden">
-            <div class="header">
-                <h1>🎥 <span>تحميل تيك توك</span></h1>
+
+            <!-- القائمة العلوية -->
+            <div class="top-nav">
+                <div class="logo">🎥 <span>Downloader</span></div>
+                <div class="user-badge" id="userBadge">👤 ضيف</div>
+                <div class="tabs">
+                    <button class="active" data-tab="home">🏠 الرئيسية</button>
+                    <button data-tab="admin" id="adminTabBtn">⚙️ المشرف</button>
+                </div>
                 <button class="logout-btn" id="logoutBtn">🚪 خروج</button>
             </div>
 
-            <!-- إحصائيات -->
-            <div class="stats-box">
-                <div class="stat-item">👥 المستخدمون النشطون: <strong id="userCount">0</strong></div>
-                <div class="stat-item">📥 إجمالي التحميلات: <strong id="totalDownloads">0</strong></div>
+            <!-- ===== تبويب الرئيسية ===== -->
+            <div id="tab-home" class="tab-content active">
+                <!-- الإحصائيات -->
+                <div class="stats-box">
+                    <div class="stat-item">👥 المستخدمون النشطون: <strong id="userCount">0</strong></div>
+                    <div class="stat-item">📥 إجمالي التحميلات: <strong id="totalDownloads">0</strong></div>
+                    <div class="stat-item" id="myDownloadsStat">📂 تحميلاتي: <strong id="myDownloadsCount">0</strong></div>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="urlInput" placeholder="ألصق رابط تيك توك هنا ..." dir="ltr">
+                    <button class="btn-primary" id="downloadBtn">🔍 تحميل</button>
+                </div>
+
+                <!-- بطاقة النتائج -->
+                <div class="result-card" id="resultCard">
+                    <div class="user-profile">
+                        <div class="avatar-frame"><img id="avatarImg" src="" alt="Avatar"></div>
+                        <div class="user-info">
+                            <h3 id="authorName">---</h3>
+                            <div class="region" id="regionInfo">📍 غير معروف</div>
+                        </div>
+                    </div>
+                    <div class="stats-grid">
+                        <span class="stat-item">👁️ <strong id="viewsCount">0</strong></span>
+                        <span class="stat-item">💬 <strong id="commentsCount">0</strong></span>
+                        <span class="stat-item">🔁 <strong id="sharesCount">0</strong></span>
+                        <span class="stat-item">⏱️ <strong id="durationSec">0</strong> ث</span>
+                    </div>
+                    <div class="video-title" id="videoTitle">عنوان الفيديو</div>
+
+                    <div class="video-wrapper" id="videoWrapper">
+                        <video id="videoPlayer" controls preload="metadata"></video>
+                        <div class="progress-overlay" id="progressOverlay">
+                            <div class="fill" id="progressFill"></div>
+                        </div>
+                        <div class="progress-text-overlay" id="progressText">0%</div>
+                    </div>
+
+                    <div class="download-actions" id="downloadActions"></div>
+                    <audio id="audioPlayer" controls style="margin-top:10px;"></audio>
+                </div>
+
+                <!-- نسخ الرابط السريع -->
+                <div style="display:flex; gap:10px; margin-top:12px; align-items:center; flex-wrap:wrap;">
+                    <span style="color:rgba(255,255,255,0.4); font-size:14px;">📋 نسخ الرابط: </span>
+                    <input type="text" id="quickCopyInput" style="flex:1; min-width:120px; padding:6px 14px; border-radius:40px; border:none; background:rgba(255,255,255,0.05); color:#fff; font-size:13px;" readonly>
+                    <button class="btn-copy-sm" id="quickCopyBtn">نسخ</button>
+                </div>
             </div>
 
-            <!-- نموذج الرابط -->
-            <div class="input-group">
-                <input type="text" id="urlInput" placeholder="ألصق رابط تيك توك هنا ..." dir="ltr">
-                <button class="btn-primary" id="downloadBtn">🔍 تحميل</button>
-            </div>
+            <!-- ===== تبويب المشرف ===== -->
+            <div id="tab-admin" class="tab-content">
+                <div class="admin-panel">
+                    <h2>⚙️ لوحة التحكم - المشرف</h2>
 
-            <!-- بطاقة النتائج -->
-            <div class="result-card" id="resultCard">
-                <div class="user-profile">
-                    <div class="avatar-frame"><img id="avatarImg" src="" alt="Avatar"></div>
-                    <div class="user-info">
-                        <h3 id="authorName">---</h3>
-                        <div class="region" id="regionInfo">📍 غير معروف</div>
+                    <!-- إذاعة -->
+                    <div style="margin-bottom:18px;">
+                        <h4 style="color:#fff; font-weight:400;">📢 إذاعة</h4>
+                        <div class="row">
+                            <textarea id="broadcastMsg" rows="2" placeholder="نص الرسالة للجميع"></textarea>
+                            <button class="btn-sm" onclick="broadcast()">إرسال</button>
+                        </div>
+                        <span id="broadcastStatus" style="color:#00b894;font-size:13px;"></span>
+                    </div>
+
+                    <!-- القنوات الإجبارية -->
+                    <div style="margin-bottom:18px;">
+                        <h4 style="color:#fff; font-weight:400;">🔗 الاشتراك الإجباري</h4>
+                        <div class="row">
+                            <input type="text" id="newChannel" placeholder="معرف القناة (بدون @)">
+                            <button class="btn-sm" onclick="addChannel()">➕ إضافة</button>
+                        </div>
+                        <div class="row">
+                            <input type="text" id="removeChannel" placeholder="المعرف للحذف">
+                            <button class="btn-sm btn-danger" onclick="removeChannel()">➖ حذف</button>
+                        </div>
+                        <div><span class="text-muted">القنوات:</span> <span id="currentChannels" class="text-muted"></span></div>
+                    </div>
+
+                    <!-- رسالة الاشتراك -->
+                    <div style="margin-bottom:18px;">
+                        <h4 style="color:#fff; font-weight:400;">📝 كليشة الاشتراك</h4>
+                        <div class="row">
+                            <input type="text" id="subMsgInput" placeholder="نص الرسالة">
+                            <button class="btn-sm" onclick="setSubMessage()">تحديث</button>
+                        </div>
+                    </div>
+
+                    <!-- إضافة مشرف (للمزيد) -->
+                    <div style="margin-bottom:18px;">
+                        <h4 style="color:#fff; font-weight:400;">➕ إضافة مشرف</h4>
+                        <div class="row">
+                            <input type="text" id="newAdminId" placeholder="اسم المستخدم">
+                            <button class="btn-sm" onclick="addAdmin()">إضافة</button>
+                        </div>
+                        <div><span class="text-muted">المشرفون:</span> <span id="currentAdmins" class="text-muted"></span></div>
+                    </div>
+
+                    <!-- قائمة المستخدمين المسجلين -->
+                    <div style="margin-bottom:18px;">
+                        <h4 style="color:#fff; font-weight:400;">👥 المستخدمون المسجلون (<span id="registeredCount">0</span>)</h4>
+                        <div class="scroll-box" id="registeredUsersList"></div>
+                    </div>
+
+                    <!-- قائمة الضيوف -->
+                    <div>
+                        <h4 style="color:#fff; font-weight:400;">👤 الضيوف الحاليون (<span id="guestCount">0</span>)</h4>
+                        <div class="scroll-box" id="guestUsersList"></div>
                     </div>
                 </div>
-                <div class="stats-grid">
-                    <span class="stat-item">👁️ <strong id="viewsCount">0</strong></span>
-                    <span class="stat-item">💬 <strong id="commentsCount">0</strong></span>
-                    <span class="stat-item">🔁 <strong id="sharesCount">0</strong></span>
-                    <span class="stat-item">⏱️ <strong id="durationSec">0</strong> ث</span>
-                </div>
-                <div class="video-title" id="videoTitle">عنوان الفيديو</div>
-
-                <!-- حاوية الفيديو مع شريط التقدم فوقه -->
-                <div class="video-wrapper" id="videoWrapper">
-                    <video id="videoPlayer" controls preload="metadata"></video>
-                    <div class="video-progress-overlay" id="videoProgressOverlay">
-                        <div class="fill" id="videoProgressFill"></div>
-                    </div>
-                    <div class="video-progress-text" id="videoProgressText">0%</div>
-                </div>
-
-                <!-- أزرار التحميل والنسخ -->
-                <div class="download-actions" id="downloadActions"></div>
-
-                <audio id="audioPlayer" controls style="margin-top:10px;"></audio>
             </div>
 
-            <!-- معلومات المطور -->
+            <!-- المطور -->
             <div class="developer-info">
                 <span>👨‍💻 المطور: <strong style="color:#fff;">rp01</strong> | <a href="https://t.me/lIIHII" target="_blank">تواصل عبر تليجرام</a></span>
-                <button class="btn-secondary" style="display:inline;padding:4px 14px;min-width:auto;" id="copyLinkBtn">📋 نسخ الرابط</button>
             </div>
         </div>
 
@@ -576,27 +878,48 @@
 
     <script>
         // ================================================================
-        //  بيانات الاعتماد الثابتة (المشرف الوحيد)
+        //  بيانات الاعتماد الثابتة (المشرف الأساسي)
         // ================================================================
-        const VALID_USERNAME = 'rp01';
-        const VALID_PASSWORD = '200786';
+        const ADMIN_USERNAME = 'rp01';
+        const ADMIN_PASSWORD = '200786';
 
         // ================================================================
-        //  البيانات المخزنة (إحصائيات)
+        //  إدارة التخزين (localStorage)
         // ================================================================
-        function loadStats() {
+        function loadData(key, defaultVal) {
             try {
-                const data = JSON.parse(localStorage.getItem('tiktok_stats'));
-                if (data) return data;
+                const data = localStorage.getItem(key);
+                if (data) return JSON.parse(data);
             } catch (e) {}
-            return { users: 0, downloads: 0 };
+            return defaultVal;
         }
 
-        function saveStats(stats) {
-            localStorage.setItem('tiktok_stats', JSON.stringify(stats));
+        function saveData(key, value) {
+            localStorage.setItem(key, JSON.stringify(value));
         }
 
-        let stats = loadStats();
+        // بنية البيانات
+        let users = loadData('tiktok_users', []); // [{username, password, registeredAt, downloads:0}]
+        let guests = loadData('tiktok_guests', []); // [{id, joinedAt, downloads:0}]
+        let adminData = loadData('tiktok_admin_data', {
+            required_channels: [],
+            admin_ids: [ADMIN_USERNAME],
+            subscription_message: "🚫 يجب الاشتراك في القنوات المطلوبة أولاً."
+        });
+        let stats = loadData('tiktok_stats', { users: 0, downloads: 0 });
+        // تحميلات كل مستخدم: مفتاح = username أو guest_id
+        let userDownloads = loadData('tiktok_user_downloads', {});
+
+        // ================================================================
+        //  حفظ البيانات بعد التعديل
+        // ================================================================
+        function saveAll() {
+            saveData('tiktok_users', users);
+            saveData('tiktok_guests', guests);
+            saveData('tiktok_admin_data', adminData);
+            saveData('tiktok_stats', stats);
+            saveData('tiktok_user_downloads', userDownloads);
+        }
 
         // ================================================================
         //  نظام الإشعارات (Toast)
@@ -619,82 +942,277 @@
         }
 
         // ================================================================
-        //  إدارة الجلسة (login/logout)
+        //  إدارة الجلسة
         // ================================================================
+        let currentUser = null; // {type: 'admin'|'user'|'guest', username: string, id: string}
+
         function isLoggedIn() {
-            return localStorage.getItem('tiktok_session') === 'true';
+            return currentUser !== null;
         }
 
-        function setSession(status) {
-            localStorage.setItem('tiktok_session', status ? 'true' : 'false');
+        function setSession(user) {
+            currentUser = user;
+            if (user) {
+                localStorage.setItem('tiktok_session', JSON.stringify(user));
+            } else {
+                localStorage.removeItem('tiktok_session');
+            }
+            updateUIAfterLogin();
         }
 
-        function showMainApp() {
+        function loadSession() {
+            try {
+                const data = localStorage.getItem('tiktok_session');
+                if (data) {
+                    const parsed = JSON.parse(data);
+                    // التحقق من صحة الجلسة (مثلاً المستخدم ما زال موجوداً)
+                    if (parsed.type === 'admin' && parsed.username === ADMIN_USERNAME) {
+                        currentUser = parsed;
+                        return true;
+                    } else if (parsed.type === 'user') {
+                        // تحقق من وجود المستخدم في قائمة users
+                        const userExists = users.some(u => u.username === parsed.username);
+                        if (userExists) {
+                            currentUser = parsed;
+                            return true;
+                        }
+                    } else if (parsed.type === 'guest') {
+                        const guestExists = guests.some(g => g.id === parsed.id);
+                        if (guestExists) {
+                            currentUser = parsed;
+                            return true;
+                        }
+                    }
+                }
+            } catch (e) {}
+            return false;
+        }
+
+        function clearSession() {
+            localStorage.removeItem('tiktok_session');
+            currentUser = null;
+        }
+
+        // ================================================================
+        //  دوال تسجيل الدخول والتسجيل والضيف
+        // ================================================================
+        function loginUser(username, password) {
+            // تحقق من المشرف
+            if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
+                setSession({ type: 'admin', username: ADMIN_USERNAME });
+                showToast('مرحباً مشرف', 'success');
+                return true;
+            }
+            // تحقق من المستخدمين المسجلين
+            const user = users.find(u => u.username === username && u.password === password);
+            if (user) {
+                setSession({ type: 'user', username: username });
+                showToast(`مرحباً ${username}`, 'success');
+                return true;
+            }
+            return false;
+        }
+
+        function registerUser(username, password, confirm) {
+            if (password !== confirm) {
+                showToast('كلمة المرور غير متطابقة', 'error');
+                return false;
+            }
+            if (username.length < 3) {
+                showToast('اسم المستخدم قصير جداً (3 أحرف على الأقل)', 'error');
+                return false;
+            }
+            // تحقق من عدم التكرار
+            if (users.some(u => u.username === username) || username === ADMIN_USERNAME) {
+                showToast('اسم المستخدم موجود بالفعل', 'error');
+                return false;
+            }
+            users.push({
+                username: username,
+                password: password,
+                registeredAt: new Date().toISOString(),
+                downloads: 0
+            });
+            // تهيئة تحميلات المستخدم
+            userDownloads[username] = [];
+            stats.users = users.length + guests.length;
+            saveAll();
+            showToast('تم إنشاء الحساب بنجاح، يمكنك تسجيل الدخول الآن', 'success');
+            return true;
+        }
+
+        function loginAsGuest() {
+            const guestId = 'guest_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+            guests.push({
+                id: guestId,
+                joinedAt: new Date().toISOString(),
+                downloads: 0
+            });
+            userDownloads[guestId] = [];
+            stats.users = users.length + guests.length;
+            saveAll();
+            setSession({ type: 'guest', id: guestId });
+            showToast('تم الدخول كضيف', 'info');
+            return true;
+        }
+
+        // ================================================================
+        //  تحديث الواجهة بعد تسجيل الدخول
+        // ================================================================
+        function updateUIAfterLogin() {
+            if (!currentUser) return;
+            // إظهار التطبيق وإخفاء شاشة الدخول
             document.getElementById('loginScreen').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
-            updateUI();
-        }
 
-        function showLoginScreen() {
-            document.getElementById('loginScreen').classList.remove('hidden');
-            document.getElementById('mainApp').classList.add('hidden');
-            document.getElementById('loginError').classList.add('hidden');
-        }
+            // تحديث اسم المستخدم في الشريط العلوي
+            let displayName = '';
+            if (currentUser.type === 'admin') displayName = '👑 مشرف';
+            else if (currentUser.type === 'user') displayName = '👤 ' + currentUser.username;
+            else displayName = '👤 ضيف (' + currentUser.id.slice(-6) + ')';
+            document.getElementById('userBadge').textContent = displayName;
 
-        // ================================================================
-        //  تحديث الواجهة (إحصائيات)
-        // ================================================================
-        function updateUI() {
-            document.getElementById('userCount').textContent = stats.users || 0;
-            document.getElementById('totalDownloads').textContent = stats.downloads || 0;
-        }
-
-        // ================================================================
-        //  معالجة تسجيل الدخول
-        // ================================================================
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const username = document.getElementById('usernameInput').value.trim();
-            const password = document.getElementById('passwordInput').value.trim();
-            const errorEl = document.getElementById('loginError');
-
-            if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-                if (!localStorage.getItem('tiktok_user_counted')) {
-                    stats.users = (stats.users || 0) + 1;
-                    saveStats(stats);
-                    localStorage.setItem('tiktok_user_counted', 'true');
-                }
-                setSession(true);
-                showMainApp();
-                showToast('تم تسجيل الدخول بنجاح', 'success');
+            // إظهار/إخفاء تبويب المشرف
+            const adminTabBtn = document.getElementById('adminTabBtn');
+            if (currentUser.type === 'admin') {
+                adminTabBtn.style.display = 'inline-block';
             } else {
-                errorEl.textContent = '❌ اسم المستخدم أو كلمة المرور غير صحيحة';
-                errorEl.classList.remove('hidden');
-                showToast('بيانات الدخول غير صحيحة', 'error');
+                adminTabBtn.style.display = 'none';
+                // إذا كان التبويب الحالي هو المشرف، ننتقل للرئيسية
+                if (document.getElementById('tab-admin').classList.contains('active')) {
+                    switchTab('home');
+                }
             }
-        });
 
-        // ================================================================
-        //  تسجيل الخروج
-        // ================================================================
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            setSession(false);
-            localStorage.removeItem('tiktok_user_counted');
-            showLoginScreen();
-            showToast('تم تسجيل الخروج', 'info');
-        });
-
-        // ================================================================
-        //  التحقق من الجلسة عند تحميل الصفحة
-        // ================================================================
-        if (isLoggedIn()) {
-            showMainApp();
-        } else {
-            showLoginScreen();
+            // تحديث الإحصائيات
+            updateStats();
+            // تحديث قائمة المستخدمين في لوحة المشرف (في حال كان مشرفاً)
+            if (currentUser.type === 'admin') {
+                renderAdminUsers();
+            }
         }
 
         // ================================================================
-        //  وظيفة تحميل الملف مع شريط تقدم فوق الفيديو
+        //  تحديث الإحصائيات
+        // ================================================================
+        function updateStats() {
+            // إجمالي المستخدمين = المسجلين + الضيوف
+            const totalUsers = users.length + guests.length;
+            document.getElementById('userCount').textContent = totalUsers;
+            document.getElementById('totalDownloads').textContent = stats.downloads || 0;
+
+            // تحميلات المستخدم الحالي
+            let myDownloads = 0;
+            if (currentUser) {
+                const key = currentUser.type === 'user' ? currentUser.username : (currentUser.type === 'guest' ? currentUser
+                    .id : null);
+                if (key && userDownloads[key]) {
+                    myDownloads = userDownloads[key].length;
+                }
+            }
+            document.getElementById('myDownloadsCount').textContent = myDownloads;
+        }
+
+        // ================================================================
+        //  عرض قائمة المستخدمين للمشرف
+        // ================================================================
+        function renderAdminUsers() {
+            // عرض المستخدمين المسجلين
+            const regList = document.getElementById('registeredUsersList');
+            if (users.length === 0) {
+                regList.innerHTML = '<div class="text-muted">لا يوجد مستخدمون مسجلون</div>';
+            } else {
+                regList.innerHTML = users.map(u =>
+                    `<div class="user-item">
+                        <span>${u.username}</span>
+                        <span class="badge">📅 ${new Date(u.registeredAt).toLocaleDateString('ar-EG')} | تحميلات: ${userDownloads[u.username]?.length || 0}</span>
+                    </div>`
+                ).join('');
+            }
+            document.getElementById('registeredCount').textContent = users.length;
+
+            // عرض الضيوف
+            const guestList = document.getElementById('guestUsersList');
+            if (guests.length === 0) {
+                guestList.innerHTML = '<div class="text-muted">لا يوجد ضيوف حالياً</div>';
+            } else {
+                guestList.innerHTML = guests.map(g =>
+                    `<div class="user-item">
+                        <span>🆔 ${g.id}</span>
+                        <span class="badge">📅 ${new Date(g.joinedAt).toLocaleDateString('ar-EG')} | تحميلات: ${userDownloads[g.id]?.length || 0}</span>
+                    </div>`
+                ).join('');
+            }
+            document.getElementById('guestCount').textContent = guests.length;
+        }
+
+        // ================================================================
+        //  دوال المشرف (القنوات، الإذاعة، إلخ)
+        // ================================================================
+        function renderAdminData() {
+            document.getElementById('currentChannels').textContent =
+                adminData.required_channels.map(ch => `@${ch}`).join('، ') || 'لا يوجد';
+            document.getElementById('currentAdmins').textContent =
+                adminData.admin_ids.join('، ') || 'لا يوجد';
+            document.getElementById('subMsgInput').value = adminData.subscription_message;
+        }
+
+        function addChannel() {
+            const ch = document.getElementById('newChannel').value.trim();
+            if (!ch) return showToast('أدخل معرف القناة', 'error');
+            if (adminData.required_channels.includes(ch)) return showToast('القناة موجودة', 'error');
+            adminData.required_channels.push(ch);
+            saveAll();
+            renderAdminData();
+            document.getElementById('newChannel').value = '';
+            showToast(`تمت إضافة @${ch}`, 'success');
+        }
+
+        function removeChannel() {
+            const ch = document.getElementById('removeChannel').value.trim();
+            if (!ch) return showToast('أدخل المعرف', 'error');
+            const idx = adminData.required_channels.indexOf(ch);
+            if (idx === -1) return showToast('القناة غير موجودة', 'error');
+            adminData.required_channels.splice(idx, 1);
+            saveAll();
+            renderAdminData();
+            document.getElementById('removeChannel').value = '';
+            showToast(`تم حذف @${ch}`, 'info');
+        }
+
+        function setSubMessage() {
+            const msg = document.getElementById('subMsgInput').value.trim();
+            if (!msg) return showToast('الرسالة فارغة', 'error');
+            adminData.subscription_message = msg;
+            saveAll();
+            renderAdminData();
+            showToast('تم تحديث الرسالة', 'success');
+        }
+
+        function addAdmin() {
+            const username = document.getElementById('newAdminId').value.trim();
+            if (!username) return showToast('أدخل اسم مستخدم', 'error');
+            if (adminData.admin_ids.includes(username)) return showToast('موجود بالفعل', 'error');
+            // يمكن إضافة أي مستخدم كمشرف (حتى لو غير مسجل)
+            adminData.admin_ids.push(username);
+            saveAll();
+            renderAdminData();
+            document.getElementById('newAdminId').value = '';
+            showToast(`تم إضافة ${username} كمشرف`, 'success');
+        }
+
+        function broadcast() {
+            const msg = document.getElementById('broadcastMsg').value.trim();
+            if (!msg) return showToast('اكتب رسالة', 'error');
+            const total = users.length + guests.length;
+            showToast(`✅ تم إرسال الرسالة إلى ${total} مستخدم (محاكاة)`, 'success');
+            document.getElementById('broadcastMsg').value = '';
+            document.getElementById('broadcastStatus').textContent = `أرسلت لـ ${total} مستخدم`;
+            setTimeout(() => document.getElementById('broadcastStatus').textContent = '', 3000);
+        }
+
+        // ================================================================
+        //  تحميل الملفات مع شريط تقدم
         // ================================================================
         async function downloadFileWithProgress(url, filename, onProgress) {
             const response = await fetch(url);
@@ -734,6 +1252,11 @@
         // ================================================================
         document.getElementById('downloadBtn').addEventListener('click', async function(e) {
             e.preventDefault();
+            if (!isLoggedIn()) {
+                showToast('يرجى تسجيل الدخول أولاً', 'error');
+                return;
+            }
+
             const url = document.getElementById('urlInput').value.trim();
             if (!url) {
                 showToast('ألصق رابط الفيديو أولاً', 'error');
@@ -743,15 +1266,13 @@
             const resultCard = document.getElementById('resultCard');
             resultCard.classList.remove('active');
 
-            // إخفاء أي شريط تقدم سابق
-            const progressOverlay = document.getElementById('videoProgressOverlay');
-            const progressFill = document.getElementById('videoProgressFill');
-            const progressText = document.getElementById('videoProgressText');
-            progressOverlay.classList.remove('active');
-            progressText.classList.remove('active');
+            const overlay = document.getElementById('progressOverlay');
+            const fill = document.getElementById('progressFill');
+            const text = document.getElementById('progressText');
+            overlay.classList.remove('active');
+            text.classList.remove('active');
 
             try {
-                // 1. جلب معلومات الفيديو من API
                 const apiUrl = `https://tikwm.com/api/?url=${encodeURIComponent(url)}`;
                 const response = await fetch(apiUrl);
                 if (!response.ok) throw new Error('فشل الاتصال بخادم التحميل');
@@ -774,91 +1295,100 @@
                 document.getElementById('durationSec').textContent = d.duration || 0;
                 document.getElementById('videoTitle').textContent = d.title || 'بدون عنوان';
 
-                // عرض الوسائط
+                const videoWrapper = document.getElementById('videoWrapper');
                 const videoPlayer = document.getElementById('videoPlayer');
                 const audioPlayer = document.getElementById('audioPlayer');
-                const videoWrapper = document.getElementById('videoWrapper');
 
+                videoWrapper.innerHTML = '';
                 if (isImage) {
-                    // في حالة الصورة: نعرض الصورة في حاوية الفيديو (كصورة)
-                    videoWrapper.innerHTML = `<img src="${images[0]}" alt="صورة تيك توك" style="width:100%;max-height:500px;object-fit:contain;background:#000;">`;
-                    // إخفاء شريط التقدم لأنه لن يكون هناك تحميل فيديو
-                    progressOverlay.classList.remove('active');
-                    progressText.classList.remove('active');
+                    const img = document.createElement('img');
+                    img.src = images[0];
+                    img.alt = 'صورة تيك توك';
+                    videoWrapper.appendChild(img);
                 } else if (videoUrl) {
-                    // في حالة فيديو: نضبط مصدر الفيديو ونعرض شريط التقدم
-                    videoPlayer.src = videoUrl;
-                    videoPlayer.load();
-                    // نعيد تعيين حاوية الفيديو (إذا كانت تحتوي على صورة من قبل)
-                    // لكننا نضمن أن الفيديو موجود
-                    videoWrapper.innerHTML = '';
-                    videoWrapper.appendChild(videoPlayer);
-                    // نضيف شريط التقدم فوق الفيديو
-                    const overlay = document.createElement('div');
-                    overlay.className = 'video-progress-overlay';
-                    overlay.id = 'videoProgressOverlay';
-                    overlay.innerHTML = `<div class="fill" id="videoProgressFill"></div>`;
-                    videoWrapper.appendChild(overlay);
-                    // نضيف النص
-                    const text = document.createElement('div');
-                    text.className = 'video-progress-text';
-                    text.id = 'videoProgressText';
-                    text.textContent = '0%';
-                    videoWrapper.appendChild(text);
-                    // نعيد ربط المتغيرات
-                    // ولكن بما أننا نعيد إنشاء العناصر، سنعيد تعريفها
-                    // لكننا سنستخدم الطريقة القديمة مع إعادة تعيين
-                    // بدلاً من ذلك، سنستخدم العناصر الموجودة ونضبطها
+                    const vid = document.createElement('video');
+                    vid.src = videoUrl;
+                    vid.controls = true;
+                    vid.preload = 'metadata';
+                    vid.style.width = '100%';
+                    vid.style.maxHeight = '500px';
+                    videoWrapper.appendChild(vid);
+                    // إعادة إنشاء شريط التقدم
+                    const newOverlay = document.createElement('div');
+                    newOverlay.className = 'progress-overlay';
+                    newOverlay.id = 'progressOverlay';
+                    newOverlay.innerHTML = `<div class="fill" id="progressFill"></div>`;
+                    videoWrapper.appendChild(newOverlay);
+                    const newText = document.createElement('div');
+                    newText.className = 'progress-text-overlay';
+                    newText.id = 'progressText';
+                    newText.textContent = '0%';
+                    videoWrapper.appendChild(newText);
                 } else {
                     videoWrapper.innerHTML = '<div style="color:#888;padding:20px;">لا يوجد محتوى مرئي</div>';
                 }
 
-                // أزرار التحميل
+                // إعادة تعريف المتغيرات بعد التغيير
+                const overlayNew = document.getElementById('progressOverlay');
+                const fillNew = document.getElementById('progressFill');
+                const textNew = document.getElementById('progressText');
+
                 const actionsDiv = document.getElementById('downloadActions');
                 actionsDiv.innerHTML = '';
 
-                // دالة مساعدة لتحميل الملف مع شريط تقدم (فوق الفيديو)
+                // دالة مساعدة للتحميل مع شريط تقدم
                 const downloadWithProgress = async (fileUrl, filename, typeLabel) => {
-                    // إظهار شريط التقدم
-                    const overlay = document.getElementById('videoProgressOverlay');
-                    const fill = document.getElementById('videoProgressFill');
-                    const text = document.getElementById('videoProgressText');
-                    if (overlay) {
-                        overlay.classList.add('active');
-                        fill.style.width = '0%';
+                    if (overlayNew) {
+                        overlayNew.classList.add('active');
+                        fillNew.style.width = '0%';
                     }
-                    if (text) {
-                        text.classList.add('active');
-                        text.textContent = '0%';
+                    if (textNew) {
+                        textNew.classList.add('active');
+                        textNew.textContent = '0%';
                     }
 
                     try {
                         await downloadFileWithProgress(fileUrl, filename, (percent, loaded, total) => {
                             if (percent !== null) {
-                                if (fill) fill.style.width = percent + '%';
-                                if (text) text.textContent = percent + '%';
+                                if (fillNew) fillNew.style.width = percent + '%';
+                                if (textNew) textNew.textContent = percent + '%';
                             } else {
-                                // إذا لم يكن هناك total، نعرض الحجم المحمل
                                 const loadedMB = (loaded / (1024 * 1024)).toFixed(1);
-                                if (fill) fill.style.width = '100%';
-                                if (text) text.textContent = `${loadedMB} MB`;
+                                if (fillNew) fillNew.style.width = '100%';
+                                if (textNew) textNew.textContent = `${loadedMB} MB`;
                             }
                         });
-                        // زيادة عداد التحميلات
-                        stats.downloads = (stats.downloads || 0) + 1;
-                        saveStats(stats);
-                        updateUI();
+                        // تسجيل التحميل للمستخدم الحالي
+                        const userKey = currentUser.type === 'user' ? currentUser.username :
+                            (currentUser.type === 'guest' ? currentUser.id : null);
+                        if (userKey) {
+                            if (!userDownloads[userKey]) userDownloads[userKey] = [];
+                            userDownloads[userKey].push({ url: url, title: d.title || 'بدون عنوان', date: new Date()
+                                    .toISOString() });
+                            // تحديث عداد التحميلات الكلي
+                            stats.downloads = (stats.downloads || 0) + 1;
+                            // تحديث عدد تحميلات المستخدم في قائمة المستخدمين (للإحصائيات)
+                            if (currentUser.type === 'user') {
+                                const userObj = users.find(u => u.username === currentUser.username);
+                                if (userObj) userObj.downloads = (userObj.downloads || 0) + 1;
+                            } else if (currentUser.type === 'guest') {
+                                const guestObj = guests.find(g => g.id === currentUser.id);
+                                if (guestObj) guestObj.downloads = (guestObj.downloads || 0) + 1;
+                            }
+                            saveAll();
+                            updateStats();
+                        }
                         showToast(`تم تحميل ${filename} بنجاح`, 'success');
                     } catch (err) {
                         showToast('فشل التحميل، سيتم فتح الرابط في تبويب جديد.', 'error');
                         window.open(fileUrl, '_blank');
                     } finally {
-                        // إخفاء شريط التقدم
-                        if (overlay) overlay.classList.remove('active');
-                        if (text) text.classList.remove('active');
+                        if (overlayNew) overlayNew.classList.remove('active');
+                        if (textNew) textNew.classList.remove('active');
                     }
                 };
 
+                // إضافة أزرار التحميل
                 if (isImage) {
                     const btnImg = document.createElement('button');
                     btnImg.className = 'btn-secondary btn-success';
@@ -884,7 +1414,7 @@
                     actionsDiv.appendChild(btnAudio);
                 }
 
-                // زر نسخ الرابط (مفتوح)
+                // زر نسخ الرابط
                 const btnCopy = document.createElement('button');
                 btnCopy.className = 'btn-secondary btn-copy';
                 btnCopy.innerHTML = '📋 نسخ الرابط';
@@ -892,23 +1422,23 @@
                     const linkToCopy = isImage ? images[0] : videoUrl;
                     if (linkToCopy) {
                         navigator.clipboard.writeText(linkToCopy).then(() => {
-                            showToast('تم نسخ الرابط إلى الحافظة', 'success');
+                            showToast('تم نسخ الرابط', 'success');
                         }).catch(() => {
-                            const textarea = document.createElement('textarea');
-                            textarea.value = linkToCopy;
-                            document.body.appendChild(textarea);
-                            textarea.select();
+                            const ta = document.createElement('textarea');
+                            ta.value = linkToCopy;
+                            document.body.appendChild(ta);
+                            ta.select();
                             document.execCommand('copy');
-                            document.body.removeChild(textarea);
-                            showToast('تم نسخ الرابط إلى الحافظة', 'success');
+                            document.body.removeChild(ta);
+                            showToast('تم نسخ الرابط', 'success');
                         });
                     } else {
-                        showToast('لا يوجد رابط للنسخ', 'error');
+                        showToast('لا يوجد رابط', 'error');
                     }
                 };
                 actionsDiv.appendChild(btnCopy);
 
-                // رابط مفتوح (فتح في تبويب جديد)
+                // زر فتح الرابط
                 const btnOpen = document.createElement('button');
                 btnOpen.className = 'btn-secondary';
                 btnOpen.innerHTML = '🔗 فتح الرابط';
@@ -919,13 +1449,12 @@
                 };
                 actionsDiv.appendChild(btnOpen);
 
-                // مشغل الصوت
                 audioPlayer.src = musicUrl || '';
                 audioPlayer.load();
 
-                // عرض النتيجة
                 resultCard.classList.add('active');
                 showToast('تم جلب المحتوى بنجاح', 'success');
+                document.getElementById('quickCopyInput').value = url;
 
             } catch (error) {
                 showToast('❌ خطأ: ' + error.message, 'error');
@@ -933,20 +1462,20 @@
         });
 
         // ================================================================
-        //  زر نسخ الرابط العام (في الأسفل)
+        //  نسخ الرابط السريع
         // ================================================================
-        document.getElementById('copyLinkBtn').addEventListener('click', function() {
-            const urlInput = document.getElementById('urlInput');
-            if (urlInput.value.trim()) {
-                navigator.clipboard.writeText(urlInput.value.trim()).then(() => {
-                    showToast('تم نسخ الرابط إلى الحافظة', 'success');
+        document.getElementById('quickCopyBtn').addEventListener('click', function() {
+            const input = document.getElementById('quickCopyInput');
+            if (input.value.trim()) {
+                navigator.clipboard.writeText(input.value.trim()).then(() => {
+                    showToast('تم نسخ الرابط', 'success');
                 }).catch(() => {
-                    urlInput.select();
+                    input.select();
                     document.execCommand('copy');
-                    showToast('تم نسخ الرابط إلى الحافظة', 'success');
+                    showToast('تم نسخ الرابط', 'success');
                 });
             } else {
-                showToast('لا يوجد رابط لنسخه', 'error');
+                showToast('لا يوجد رابط', 'error');
             }
         });
 
@@ -958,9 +1487,154 @@
         });
 
         // ================================================================
-        //  تحديث الإحصائيات الأولية
+        //  التنقل بين التبويبات
         // ================================================================
-        updateUI();
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.top-nav .tabs button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('tab-' + tabId).classList.add('active');
+            const btn = document.querySelector(`.top-nav .tabs button[data-tab="${tabId}"]`);
+            if (btn) btn.classList.add('active');
+            if (tabId === 'admin' && currentUser && currentUser.type === 'admin') {
+                renderAdminData();
+                renderAdminUsers();
+            }
+        }
+
+        document.querySelectorAll('.top-nav .tabs button').forEach(btn => {
+            btn.addEventListener('click', function() {
+                switchTab(this.dataset.tab);
+            });
+        });
+
+        // ================================================================
+        //  تبديل بين نماذج تسجيل الدخول والتسجيل
+        // ================================================================
+        const loginTabs = document.querySelectorAll('[data-login-tab]');
+        loginTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                loginTabs.forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const mode = this.dataset.loginTab;
+                if (mode === 'login') {
+                    document.getElementById('loginFormFields').classList.remove('hidden');
+                    document.getElementById('registerFormFields').classList.add('hidden');
+                } else {
+                    document.getElementById('loginFormFields').classList.add('hidden');
+                    document.getElementById('registerFormFields').classList.remove('hidden');
+                }
+                // إخفاء أي رسائل خطأ سابقة
+                document.getElementById('loginError').classList.add('hidden');
+                document.getElementById('registerError').classList.add('hidden');
+                document.getElementById('loginSuccess').classList.add('hidden');
+                document.getElementById('registerSuccess').classList.add('hidden');
+            });
+        });
+
+        // ================================================================
+        //  معالجة تسجيل الدخول
+        // ================================================================
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('usernameInput').value.trim();
+            const password = document.getElementById('passwordInput').value.trim();
+            const errorEl = document.getElementById('loginError');
+            const successEl = document.getElementById('loginSuccess');
+            errorEl.classList.add('hidden');
+            successEl.classList.add('hidden');
+
+            if (loginUser(username, password)) {
+                successEl.textContent = 'تم تسجيل الدخول بنجاح';
+                successEl.classList.remove('hidden');
+                // سيتم تحديث الواجهة تلقائياً عبر setSession
+            } else {
+                errorEl.textContent = '❌ اسم المستخدم أو كلمة المرور غير صحيحة';
+                errorEl.classList.remove('hidden');
+                showToast('بيانات الدخول غير صحيحة', 'error');
+            }
+        });
+
+        // ================================================================
+        //  معالجة التسجيل
+        // ================================================================
+        document.getElementById('registerBtn').addEventListener('click', function() {
+            const username = document.getElementById('regUsername').value.trim();
+            const password = document.getElementById('regPassword').value.trim();
+            const confirm = document.getElementById('regPasswordConfirm').value.trim();
+            const errorEl = document.getElementById('registerError');
+            const successEl = document.getElementById('registerSuccess');
+            errorEl.classList.add('hidden');
+            successEl.classList.add('hidden');
+
+            if (registerUser(username, password, confirm)) {
+                successEl.textContent = 'تم إنشاء الحساب، يمكنك تسجيل الدخول الآن';
+                successEl.classList.remove('hidden');
+                // تبديل إلى نموذج الدخول
+                document.querySelector('[data-login-tab="login"]').click();
+                // ملء حقلي الدخول بالاسم وكلمة المرور
+                document.getElementById('usernameInput').value = username;
+                document.getElementById('passwordInput').value = password;
+                showToast('تم إنشاء الحساب بنجاح', 'success');
+            } else {
+                // الرسالة تظهر عبر showToast
+            }
+        });
+
+        // ================================================================
+        //  دخول كضيف
+        // ================================================================
+        document.getElementById('guestLoginBtn').addEventListener('click', function() {
+            loginAsGuest();
+        });
+
+        // ================================================================
+        //  تسجيل الخروج
+        // ================================================================
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            clearSession();
+            // إعادة تحميل الصفحة لإظهار شاشة الدخول
+            location.reload();
+        });
+
+        // ================================================================
+        //  تهيئة الصفحة (التحقق من الجلسة)
+        // ================================================================
+        (function init() {
+            if (loadSession()) {
+                // تحديث البيانات بعد تحميل الجلسة
+                // نضمن تحديث الإحصائيات
+                updateUIAfterLogin();
+                // تحديث قائمة المستخدمين إذا كان مشرفاً
+                if (currentUser.type === 'admin') {
+                    renderAdminData();
+                    renderAdminUsers();
+                }
+                // تفعيل التبويب الرئيسي
+                switchTab('home');
+            } else {
+                // إظهار شاشة الدخول
+                document.getElementById('loginScreen').classList.remove('hidden');
+                document.getElementById('mainApp').classList.add('hidden');
+            }
+        })();
+
+        // ================================================================
+        //  تحديث الإحصائيات بشكل دوري (اختياري)
+        // ================================================================
+        // يمكن إضافة setInterval لتحديث الإحصائيات كل دقيقة
+        setInterval(() => {
+            if (isLoggedIn()) {
+                // تحديث البيانات من localStorage (في حال تغيرت من نافذة أخرى)
+                users = loadData('tiktok_users', []);
+                guests = loadData('tiktok_guests', []);
+                stats = loadData('tiktok_stats', { users: 0, downloads: 0 });
+                userDownloads = loadData('tiktok_user_downloads', {});
+                updateStats();
+                if (currentUser.type === 'admin') {
+                    renderAdminUsers();
+                }
+            }
+        }, 30000); // كل 30 ثانية
     </script>
 
 </body>
