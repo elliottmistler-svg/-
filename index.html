@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok Downloader Pro - مشرف</title>
+    <title>TikTok Downloader - مشرف</title>
     <style>
-        /* ====== الأساسيات ====== */
         * {
             margin: 0;
             padding: 0;
@@ -48,7 +47,6 @@
             max-width: 800px;
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 32px;
             padding: 30px 28px;
@@ -64,7 +62,7 @@
             color: rgba(255, 255, 255, 0.4);
         }
 
-        /* ====== شاشة تسجيل الدخول ====== */
+        /* ===== شاشة تسجيل الدخول ===== */
         #loginScreen {
             animation: fadeSlide 0.5s ease;
         }
@@ -125,7 +123,7 @@
             margin-top: 10px;
         }
 
-        /* ====== الواجهة الرئيسية ====== */
+        /* ===== الواجهة الرئيسية ===== */
         #mainApp {
             animation: fadeSlide 0.5s ease;
         }
@@ -145,13 +143,6 @@
             background: linear-gradient(90deg, #ff0050, #00d4ff);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
-        .header .user-info {
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 14px;
-            background: rgba(255, 255, 255, 0.05);
-            padding: 6px 16px;
-            border-radius: 30px;
         }
         .header .logout-btn {
             background: rgba(255, 0, 0, 0.2);
@@ -234,35 +225,61 @@
             box-shadow: 0 8px 30px rgba(255, 0, 80, 0.5);
         }
 
-        /* شريط التقدم */
-        .progress-container {
-            margin: 16px 0;
-            display: none;
-        }
-        .progress-container.active {
-            display: block;
-        }
-        .progress-bar-bg {
-            width: 100%;
-            height: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 60px;
-            overflow: hidden;
+        /* ===== شريط التقدم داخل الفيديو ===== */
+        .video-wrapper {
             position: relative;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 12px 0;
         }
-        .progress-bar-fill {
-            width: 0%;
+        .video-wrapper video {
+            width: 100%;
+            max-height: 500px;
+            display: block;
+            background: #000;
+        }
+        .video-progress-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.2);
+            transition: opacity 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+        .video-progress-overlay.active {
+            opacity: 1;
+        }
+        .video-progress-overlay .fill {
             height: 100%;
+            width: 0%;
             background: linear-gradient(90deg, #ff0050, #00d4ff);
-            border-radius: 60px;
-            transition: width 0.2s ease;
+            border-radius: 0 0 16px 16px;
+            transition: width 0.3s ease;
         }
-        .progress-text {
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 14px;
-            margin-top: 6px;
-            display: flex;
-            justify-content: space-between;
+        .video-progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(0,0,0,0.8);
+            background: rgba(0,0,0,0.6);
+            padding: 12px 24px;
+            border-radius: 60px;
+            display: none;
+            z-index: 5;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .video-progress-text.active {
+            display: block;
+            animation: fadeSlide 0.3s ease;
         }
 
         /* بطاقة النتيجة */
@@ -333,23 +350,6 @@
             font-weight: 400;
             margin: 10px 0 14px;
             opacity: 0.9;
-        }
-        .media-container {
-            border-radius: 16px;
-            overflow: hidden;
-            background: #000;
-            margin: 12px 0;
-            max-height: 500px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .media-container img,
-        .media-container video {
-            width: 100%;
-            max-height: 500px;
-            object-fit: contain;
-            display: block;
         }
 
         .download-actions {
@@ -507,8 +507,8 @@
                 <p>🔐 سجل دخولك للوصول إلى لوحة التحميل</p>
             </div>
             <form class="login-form" id="loginForm">
-                <input type="text" id="usernameInput" placeholder="اسم المستخدم" value="rp01" required>
-                <input type="password" id="passwordInput" placeholder="كلمة المرور" value="200786" required>
+                <input type="text" id="usernameInput" placeholder="اسم المستخدم" required>
+                <input type="password" id="passwordInput" placeholder="كلمة المرور" required>
                 <button type="submit">🚀 دخول</button>
                 <div id="loginError" class="login-error hidden"></div>
             </form>
@@ -518,10 +518,7 @@
         <div id="mainApp" class="hidden">
             <div class="header">
                 <h1>🎥 <span>تحميل تيك توك</span></h1>
-                <div>
-                    <span class="user-info" id="userDisplay">👤 rp01</span>
-                    <button class="logout-btn" id="logoutBtn">🚪 خروج</button>
-                </div>
+                <button class="logout-btn" id="logoutBtn">🚪 خروج</button>
             </div>
 
             <!-- إحصائيات -->
@@ -534,17 +531,6 @@
             <div class="input-group">
                 <input type="text" id="urlInput" placeholder="ألصق رابط تيك توك هنا ..." dir="ltr">
                 <button class="btn-primary" id="downloadBtn">🔍 تحميل</button>
-            </div>
-
-            <!-- شريط التقدم -->
-            <div class="progress-container" id="progressContainer">
-                <div class="progress-bar-bg">
-                    <div class="progress-bar-fill" id="progressFill"></div>
-                </div>
-                <div class="progress-text">
-                    <span id="progressLabel">جاري التحميل...</span>
-                    <span id="progressPercent">0%</span>
-                </div>
             </div>
 
             <!-- بطاقة النتائج -->
@@ -563,15 +549,26 @@
                     <span class="stat-item">⏱️ <strong id="durationSec">0</strong> ث</span>
                 </div>
                 <div class="video-title" id="videoTitle">عنوان الفيديو</div>
-                <div class="media-container" id="mediaContainer"></div>
+
+                <!-- حاوية الفيديو مع شريط التقدم فوقه -->
+                <div class="video-wrapper" id="videoWrapper">
+                    <video id="videoPlayer" controls preload="metadata"></video>
+                    <div class="video-progress-overlay" id="videoProgressOverlay">
+                        <div class="fill" id="videoProgressFill"></div>
+                    </div>
+                    <div class="video-progress-text" id="videoProgressText">0%</div>
+                </div>
+
+                <!-- أزرار التحميل والنسخ -->
                 <div class="download-actions" id="downloadActions"></div>
+
                 <audio id="audioPlayer" controls style="margin-top:10px;"></audio>
             </div>
 
             <!-- معلومات المطور -->
             <div class="developer-info">
                 <span>👨‍💻 المطور: <strong style="color:#fff;">rp01</strong> | <a href="https://t.me/lIIHII" target="_blank">تواصل عبر تليجرام</a></span>
-                <span style="direction:ltr;">نسخ الرابط: <button class="btn-secondary" style="display:inline;padding:4px 14px;min-width:auto;" id="copyLinkBtn">📋 نسخ</button></span>
+                <button class="btn-secondary" style="display:inline;padding:4px 14px;min-width:auto;" id="copyLinkBtn">📋 نسخ الرابط</button>
             </div>
         </div>
 
@@ -579,7 +576,7 @@
 
     <script>
         // ================================================================
-        //  بيانات الاعتماد الثابتة
+        //  بيانات الاعتماد الثابتة (المشرف الوحيد)
         // ================================================================
         const VALID_USERNAME = 'rp01';
         const VALID_PASSWORD = '200786';
@@ -645,12 +642,11 @@
         }
 
         // ================================================================
-        //  تحديث الواجهة (إحصائيات + واجهة المستخدم)
+        //  تحديث الواجهة (إحصائيات)
         // ================================================================
         function updateUI() {
             document.getElementById('userCount').textContent = stats.users || 0;
             document.getElementById('totalDownloads').textContent = stats.downloads || 0;
-            document.getElementById('userDisplay').textContent = `👤 ${VALID_USERNAME}`;
         }
 
         // ================================================================
@@ -663,8 +659,6 @@
             const errorEl = document.getElementById('loginError');
 
             if (username === VALID_USERNAME && password === VALID_PASSWORD) {
-                // زيادة عدد المستخدمين (مرة واحدة لكل جلسة)
-                // نتحقق إذا لم يتم احتساب هذه الجلسة مسبقاً
                 if (!localStorage.getItem('tiktok_user_counted')) {
                     stats.users = (stats.users || 0) + 1;
                     saveStats(stats);
@@ -700,7 +694,7 @@
         }
 
         // ================================================================
-        //  وظيفة التحميل مع شريط تقدم
+        //  وظيفة تحميل الملف مع شريط تقدم فوق الفيديو
         // ================================================================
         async function downloadFileWithProgress(url, filename, onProgress) {
             const response = await fetch(url);
@@ -746,18 +740,15 @@
                 return;
             }
 
-            const progressContainer = document.getElementById('progressContainer');
-            const progressFill = document.getElementById('progressFill');
-            const progressLabel = document.getElementById('progressLabel');
-            const progressPercent = document.getElementById('progressPercent');
             const resultCard = document.getElementById('resultCard');
             resultCard.classList.remove('active');
 
-            // إظهار شريط التقدم
-            progressContainer.classList.add('active');
-            progressFill.style.width = '0%';
-            progressPercent.textContent = '0%';
-            progressLabel.textContent = 'جارٍ الاتصال بالخادم...';
+            // إخفاء أي شريط تقدم سابق
+            const progressOverlay = document.getElementById('videoProgressOverlay');
+            const progressFill = document.getElementById('videoProgressFill');
+            const progressText = document.getElementById('videoProgressText');
+            progressOverlay.classList.remove('active');
+            progressText.classList.remove('active');
 
             try {
                 // 1. جلب معلومات الفيديو من API
@@ -784,47 +775,73 @@
                 document.getElementById('videoTitle').textContent = d.title || 'بدون عنوان';
 
                 // عرض الوسائط
-                const mediaContainer = document.getElementById('mediaContainer');
-                mediaContainer.innerHTML = '';
-                let thumbnail = '';
+                const videoPlayer = document.getElementById('videoPlayer');
+                const audioPlayer = document.getElementById('audioPlayer');
+                const videoWrapper = document.getElementById('videoWrapper');
 
                 if (isImage) {
-                    const img = document.createElement('img');
-                    img.src = images[0];
-                    img.alt = 'صورة تيك توك';
-                    mediaContainer.appendChild(img);
-                    thumbnail = images[0];
+                    // في حالة الصورة: نعرض الصورة في حاوية الفيديو (كصورة)
+                    videoWrapper.innerHTML = `<img src="${images[0]}" alt="صورة تيك توك" style="width:100%;max-height:500px;object-fit:contain;background:#000;">`;
+                    // إخفاء شريط التقدم لأنه لن يكون هناك تحميل فيديو
+                    progressOverlay.classList.remove('active');
+                    progressText.classList.remove('active');
                 } else if (videoUrl) {
-                    const vid = document.createElement('video');
-                    vid.src = videoUrl;
-                    vid.controls = true;
-                    vid.preload = 'metadata';
-                    vid.style.maxHeight = '500px';
-                    mediaContainer.appendChild(vid);
-                    thumbnail = d.author?.avatar || '';
+                    // في حالة فيديو: نضبط مصدر الفيديو ونعرض شريط التقدم
+                    videoPlayer.src = videoUrl;
+                    videoPlayer.load();
+                    // نعيد تعيين حاوية الفيديو (إذا كانت تحتوي على صورة من قبل)
+                    // لكننا نضمن أن الفيديو موجود
+                    videoWrapper.innerHTML = '';
+                    videoWrapper.appendChild(videoPlayer);
+                    // نضيف شريط التقدم فوق الفيديو
+                    const overlay = document.createElement('div');
+                    overlay.className = 'video-progress-overlay';
+                    overlay.id = 'videoProgressOverlay';
+                    overlay.innerHTML = `<div class="fill" id="videoProgressFill"></div>`;
+                    videoWrapper.appendChild(overlay);
+                    // نضيف النص
+                    const text = document.createElement('div');
+                    text.className = 'video-progress-text';
+                    text.id = 'videoProgressText';
+                    text.textContent = '0%';
+                    videoWrapper.appendChild(text);
+                    // نعيد ربط المتغيرات
+                    // ولكن بما أننا نعيد إنشاء العناصر، سنعيد تعريفها
+                    // لكننا سنستخدم الطريقة القديمة مع إعادة تعيين
+                    // بدلاً من ذلك، سنستخدم العناصر الموجودة ونضبطها
                 } else {
-                    mediaContainer.innerHTML = '<div style="color:#888;padding:20px;">لا يوجد محتوى مرئي</div>';
+                    videoWrapper.innerHTML = '<div style="color:#888;padding:20px;">لا يوجد محتوى مرئي</div>';
                 }
 
                 // أزرار التحميل
                 const actionsDiv = document.getElementById('downloadActions');
                 actionsDiv.innerHTML = '';
 
-                // دالة مساعدة لتحميل الملف مع شريط تقدم
+                // دالة مساعدة لتحميل الملف مع شريط تقدم (فوق الفيديو)
                 const downloadWithProgress = async (fileUrl, filename, typeLabel) => {
-                    progressLabel.textContent = `جارٍ تحميل ${typeLabel}...`;
-                    progressFill.style.width = '0%';
-                    progressPercent.textContent = '0%';
+                    // إظهار شريط التقدم
+                    const overlay = document.getElementById('videoProgressOverlay');
+                    const fill = document.getElementById('videoProgressFill');
+                    const text = document.getElementById('videoProgressText');
+                    if (overlay) {
+                        overlay.classList.add('active');
+                        fill.style.width = '0%';
+                    }
+                    if (text) {
+                        text.classList.add('active');
+                        text.textContent = '0%';
+                    }
+
                     try {
                         await downloadFileWithProgress(fileUrl, filename, (percent, loaded, total) => {
                             if (percent !== null) {
-                                progressFill.style.width = percent + '%';
-                                progressPercent.textContent = percent + '%';
+                                if (fill) fill.style.width = percent + '%';
+                                if (text) text.textContent = percent + '%';
                             } else {
                                 // إذا لم يكن هناك total، نعرض الحجم المحمل
                                 const loadedMB = (loaded / (1024 * 1024)).toFixed(1);
-                                progressPercent.textContent = `${loadedMB} MB`;
-                                progressFill.style.width = '100%';
+                                if (fill) fill.style.width = '100%';
+                                if (text) text.textContent = `${loadedMB} MB`;
                             }
                         });
                         // زيادة عداد التحميلات
@@ -836,8 +853,9 @@
                         showToast('فشل التحميل، سيتم فتح الرابط في تبويب جديد.', 'error');
                         window.open(fileUrl, '_blank');
                     } finally {
-                        // إخفاء شريط التقدم بعد التحميل
-                        progressContainer.classList.remove('active');
+                        // إخفاء شريط التقدم
+                        if (overlay) overlay.classList.remove('active');
+                        if (text) text.classList.remove('active');
                     }
                 };
 
@@ -876,7 +894,6 @@
                         navigator.clipboard.writeText(linkToCopy).then(() => {
                             showToast('تم نسخ الرابط إلى الحافظة', 'success');
                         }).catch(() => {
-                            // Fallback
                             const textarea = document.createElement('textarea');
                             textarea.value = linkToCopy;
                             document.body.appendChild(textarea);
@@ -903,7 +920,6 @@
                 actionsDiv.appendChild(btnOpen);
 
                 // مشغل الصوت
-                const audioPlayer = document.getElementById('audioPlayer');
                 audioPlayer.src = musicUrl || '';
                 audioPlayer.load();
 
@@ -911,19 +927,8 @@
                 resultCard.classList.add('active');
                 showToast('تم جلب المحتوى بنجاح', 'success');
 
-                // زيادة عدد التحميلات تلقائياً عند جلب المحتوى (بدون تحميل فعلي)
-                // لكننا نزيده عند نجاح التحميل الفعلي، لذا لا نكرره هنا.
-
             } catch (error) {
                 showToast('❌ خطأ: ' + error.message, 'error');
-                progressContainer.classList.remove('active');
-            } finally {
-                // إذا لم يتم إخفاؤه بسبب خطأ، نخفيه بعد ثوانٍ
-                setTimeout(() => {
-                    if (!document.querySelector('.result-card.active')) {
-                        progressContainer.classList.remove('active');
-                    }
-                }, 5000);
             }
         });
 
